@@ -18,6 +18,33 @@ WEEYDAY_MAP = {
 	WEEKDAY_SATURDAY => 5
 }
 
+MONTH_JANUARY = 'jan'
+MONTH_FEBRUARY = 'feb'
+MONTH_MARCH = 'mar'
+MONTH_APRIL = 'apr'
+MONTH_MAY = 'may'
+MONTH_JUNE = 'jun'
+MONTH_JULY = 'jul'
+MONTH_AUGUST = 'aug'
+MONTH_SEPTEMBER = 'sep'
+MONTH_OCTOBER = 'okt'
+MONTH_NOVEMBER = 'nov'
+MONTH_DECEMBER = 'dec'
+MONTH_MAP = {
+	MONTH_JANUARY => 1,
+	MONTH_FEBRUARY => 2,
+	MONTH_MARCH => 3,
+	MONTH_APRIL => 4,
+	MONTH_MAY => 5,
+	MONTH_JUNE => 6,
+	MONTH_JULY => 7,
+	MONTH_AUGUST => 8,
+	MONTH_SEPTEMBER => 9,
+	MONTH_OCTOBER => 10,
+	MONTH_NOVEMBER => 11,
+	MONTH_DECEMBER => 12
+}
+
 ARGUMENT_INDEX_TITLE = 0
 ARGUMENT_INDEX_LOCATION = 1
 ARGUMENT_INDEX_WEEKS = 2
@@ -25,13 +52,13 @@ ARGUMENT_INDEX_TEACHER = 3
 ARGUMENT_INDEX_UNKNOWN = 4
 
 class Entry
-	attr_accessor :weekday
 	attr_accessor :start_time
 	attr_accessor :end_time
+	attr_accessor :weekday
+	attr_accessor :weeks
 	attr_accessor :title
 	attr_accessor :teacher
 	attr_accessor :location
-	attr_accessor :weeks
 
 	def initialize(weekday, start_time, end_time, title, teacher, location, weeks)
 		@weekday = weekday
@@ -43,18 +70,17 @@ class Entry
 		@weeks = self.parse_weeks(weeks)
 	end
 
+	# Possible formats:
+	# * 5
+	# * 5, 10
+	# * 5-7
+	# * 5-7, 10
 	def parse_weeks(weeks)
-		# Possible formats:
-		# * 5
-		# * 5, 10
-		# * 5-7
-		# * 5-7, 10
 		array = []
 		weeks.split(',').each do |item|
-			args = item.split('-')
-			first = args[0].to_i
-			last = args.size > 1 ? args[1].to_i : first
-			array = array | Array.new(last - first + 1) { |index| index + first }
+			first, last = item.split('-').map { |item| item.to_i }
+			size = last.nil? ? 1 : last - first + 1
+			array = array | Array.new(size) { |index| index + first }
 		end
 		return array
 	end
@@ -62,23 +88,32 @@ end
 
 entries = []
 
-# TODO load from HTML
-year = 2011
-month = 9
-day = 19
-
-# TODO load from HTML
-times = [[8, 00],[8, 30],[9, 00],[9, 30],[10, 00],[10, 30],[11, 00],[11, 30],[12, 00],[12, 30],[13, 00],[13, 30],[14, 00],[15, 30],[15, 00],[15, 30],[16, 00],[16, 30],[17, 00],[17, 30],[18, 00],[18, 30],[19, 00],[19, 30],[20, 00]]
-
+# Parse HTML file
 uri = 'example.html'
 document = Nokogiri::HTML(open(uri))
+table_header = document.xpath('/html/body/table[@class="header-border-args"]/tbody')
+table_grid = document.xpath('/html/body/table[@class="grid-border-args"]/tbody')
 
-rows = document.xpath('/html/body/table[@class="grid-border-args"]/tbody/tr')
+# Load reference date
+day, month, year = table_header.xpath('tr/td/table[@class="header-6-args"]/tbody/tr/td/span[@class="header-6-0-3"]').first.inner_html.split(' ')
+day = day.to_i
+month = MONTH_MAP[month]
+year = year.to_i
+
+# Load times
+times = []
+table_grid.xpath('tr/td[@class="col-label-one"]').each do |column|
+	time = column.inner_html
+	times.push(time.split(':'))
+end
+
+# Load entries
+rows = table_grid.xpath('tr')
 while row = rows.shift() do
-	first_column = row.xpath('td[@class="row-label-one"]').first
-	if first_column then
-		weekday = WEEYDAY_MAP[first_column.inner_html]
-		height = first_column.attribute('rowspan').value.to_i
+	weekday_column = row.xpath('td[@class="row-label-one"]').first
+	if weekday_column then
+		weekday = WEEYDAY_MAP[weekday_column.inner_html]
+		height = weekday_column.attribute('rowspan').value.to_i
 		while true do
 			position = 0
 			row.xpath('td[@class="cell-border"] | td[@class="object-cell-border"]').each do |column|
