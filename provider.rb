@@ -7,7 +7,6 @@ require "./parser"
 require "./exporter_ical"
 
 class Provider < Sinatra::Application
-	set :bind, "localhost"
 	set :port, 9494
 	set :sessions, false
 	
