@@ -7,7 +7,7 @@ require "./parser"
 require "./exporter_ical"
 
 class Provider < Sinatra::Application
-	set :port, 9494
+	set :port, 8081
 	set :sessions, false
 	
 	get '/ics/' do
