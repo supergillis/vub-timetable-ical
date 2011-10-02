@@ -4,6 +4,7 @@ require "ri_cal"
 class ICalExporter
 	def export(schedule)
 		calendar = RiCal.Calendar
+		schedule.sort {|a, b| a.start_date <=> b.start_date }
 		schedule.each do |entry|
 			event = RiCal.Event
 			event.summary = entry.course.title

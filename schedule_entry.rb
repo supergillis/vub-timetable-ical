@@ -8,4 +8,8 @@ class ScheduleEntry
 		@start_date = start_date
 		@end_date = end_date
 	end
+
+	def <=>(other)
+		@start_date <=> other.start_date
+	end
 end

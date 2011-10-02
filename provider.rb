@@ -4,7 +4,7 @@ require "nokogiri"
 require "sinatra/base"
 
 require "./parser"
-require "./exporter_ical"
+require "./exporter_factory"
 
 class Provider < Sinatra::Application
 	set :port, 8081
@@ -35,7 +35,8 @@ class Provider < Sinatra::Application
 			# Parse the URI and print the iCal
 			parser = Parser.new
 			schedule = parser.parse(uri)
-			exporter = ICalExporter.new
+			exporter_type = params.has_key?("exporter") ? params["exporter"] : ExporterFactory::TYPE_ICAL
+			exporter = ExporterFactory.make exporter_type
 			exporter.export(schedule)
 		else
 			redirect '/usage'

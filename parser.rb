@@ -100,8 +100,9 @@ class Parser
 							end_time = @blocks[position + size]
 							weeks = Parser.week_string_to_array(arguments[ARGUMENT_INDEX_WEEKS])
 							weeks.each do |week|
-								start_date = DateTime::civil(@year, @month, @day, start_time[0], start_time[1]) + (week - 1) * 7 + weekday
-								end_date = DateTime::civil(@year, @month, @day, end_time[0], end_time[1]) + (week - 1) * 7 + weekday
+								offset = weekday * 24 * 60 * 60 + (week - 1) * 7 * 24 * 60 * 60
+								start_date = Time::utc(@year, @month, @day, start_time[0], start_time[1]) + offset
+								end_date = Time::utc(@year, @month, @day, end_time[0], end_time[1]) + offset
 								entry = ScheduleEntry.new(course, start_date, end_date)
 								@schedule.push(entry)
 							end
