@@ -1,3 +1,6 @@
+require "rubygems"
+require "ri_cal"
+
 class ICalExporter
 	def export(schedule)
 		calendar = RiCal.Calendar

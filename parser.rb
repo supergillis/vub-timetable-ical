@@ -1,7 +1,6 @@
 require "rubygems"
-require "open-uri"
 require "nokogiri"
-require "ri_cal"
+require "open-uri"
 
 require "./schedule"
 require "./schedule_entry"
