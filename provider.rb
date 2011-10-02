@@ -11,10 +11,6 @@ class Provider < Sinatra::Application
 	set :sessions, false
 	
 	get '/' do
-		redirect '/courses'
-	end
-	
-	get '/list' do
 		redirect '/usage'
 	end
 	
