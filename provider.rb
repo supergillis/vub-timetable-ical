@@ -22,14 +22,7 @@ class Provider < Sinatra::Application
 	get '/ics' do
 		if params.has_key?("identifier") and params.has_key?("weeks") then
 			# Create the URI
-			parameters = {
-				:idtype => "name",
-				:template => "Student Set Individual",
-				:objectclass => "Student Set",
-				:identifier => params["identifier"],
-				:weeks => params["weeks"]
-			}
-			uri = "http://locus.vub.ac.be/reporting/individual?idtype=%{idtype}&template=%{template}&objectclass=%{objectclass}&identifier=%{identifier}&weeks=%{weeks}" % parameters
+			uri = "http://locus.vub.ac.be:8080/reporting/individual?idtype=name&template=Student+Set+Individual&objectclass=Student+Set&identifier=%s&weeks=%s" % [params["identifier"], params["weeks"]]
 			uri.gsub!(' ', '+') # Replace spaces with +
 
 			# Parse the URI and print the iCal

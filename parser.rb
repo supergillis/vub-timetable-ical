@@ -71,6 +71,7 @@ class Parser
 		@day = @day.to_i
 		@month = MONTH_MAP[@month]
 		@year = @year.to_i
+		puts @year
 	end
 	
 	def parse_blocks
