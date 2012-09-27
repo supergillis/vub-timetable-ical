@@ -1,0 +1,24 @@
+[
+    {
+      "identifier": "1+M+Computerwetenschappen%2FLanguages+and+Software+Engineering",
+      "weeks": "1-14",
+      "courses": [
+        "Research topics in Software (HOC)",
+        "Research topics in Software (WPO)"
+      ]
+    },
+    {
+      "identifier": "1+M+Computerwetenschappen%2FWeb+%26+Informatiesystemen",
+      "weeks": "1-14",
+      "courses": [
+        "User Interface Design (HOC+WPO)_"
+      ]
+    },
+    {
+      "identifier": "Master+in+de+Toegepaste+Informatica",
+      "weeks": "1-14",
+      "courses": [
+        "Operating systems and security (HOC+WPO)"
+      ]
+    }
+]
