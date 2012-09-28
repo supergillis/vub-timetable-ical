@@ -1,10 +1,14 @@
 [
     {
       "identifier": "1+M+Computerwetenschappen%2FLanguages+and+Software+Engineering",
-      "weeks": "1-14",
+      "weeks": "1-36",
       "courses": [
         "Research topics in Software (HOC)",
-        "Research topics in Software (WPO)"
+        "Research topics in Software (WPO)",
+        "Programming Language Engineering (HOC)",
+        "Programming Language Engineering (WPO)",
+        "Distributed and Mobile Programming Paradigms (HOC)",
+        "Distributed and Mobile Programming Paradigms (WPO)"
       ]
     },
     {

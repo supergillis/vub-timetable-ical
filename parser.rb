@@ -60,12 +60,20 @@ class Parser
 		@table_header = @document.xpath("/html/body/table[@class='header-border-args']")
 		@table_grid = @document.xpath("/html/body/table[@class='grid-border-args']")
 		@schedule = Schedule.new
+		parse_week
 		parse_reference_date
 		parse_blocks
 		parse_schedule
 		return @schedule
 	end
 	
+	def parse_week
+		weeks = @table_header.xpath("tr/td/table[@class='header-6-args']/tr/td/span[@class='header-6-0-1']").first.inner_html
+		weeks = weeks.split("-")
+		weeks = weeks[0].split(",")
+		@week = weeks[0].to_i
+	end
+
 	def parse_reference_date
 		@day, @month, @year = @table_header.xpath("tr/td/table[@class='header-6-args']/tr/td/span[@class='header-6-0-3']").first.inner_html.split(" ")
 		@day = @day.to_i
@@ -100,7 +108,8 @@ class Parser
 							end_time = @blocks[position + size]
 							weeks = Parser.week_string_to_array(arguments[ARGUMENT_INDEX_WEEKS])
 							weeks.each do |week|
-								offset = weekday * 24 * 60 * 60 + (week - 1) * 7 * 24 * 60 * 60
+								week = week - @week
+								offset = (weekday * 24 * 60 * 60) + (week * 7 * 24 * 60 * 60)
 								start_date = Time::utc(@year, @month, @day, start_time[0], start_time[1]) + offset
 								end_date = Time::utc(@year, @month, @day, end_time[0], end_time[1]) + offset
 								entry = ScheduleEntry.new(course, start_date, end_date)

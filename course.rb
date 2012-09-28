@@ -1,10 +1,10 @@
 class Course
-	attr_accessor :title
+	attr_accessor :name
 	attr_accessor :teacher
 	attr_accessor :location
 
-	def initialize(title, teacher, location)
-		@title = title
+	def initialize(name, teacher, location)
+		@name = name
 		@teacher = teacher
 		@location = location
 	end
